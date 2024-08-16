@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import apiURL from "../api";
+import Form from "./Form";
 
 const Home = (props) => {
+  const [isAddingPage, setIsAddingPage] = useState(false)
+
   const handleClick = async (event) => {
     // Prevents the browser from following the link.
     event.preventDefault();
@@ -14,12 +17,20 @@ const Home = (props) => {
     props.navigate(page)
   }
 
+  const hideForm = () => {
+    setIsAddingPage(false)
+  }
+
   return (
 		<main>
       <h1 className="title">Wikiverse</h1>
 			<p className="subtitle">
         An interesting <span aria-label="library">📚</span>
       </p>
+  
+      <button onClick={() => setIsAddingPage(!isAddingPage)} aria-expanded={isAddingPage}>Toggle Form</button>
+      {isAddingPage && <Form hideForm={hideForm} fetchPages={props.fetchPages} />}
+
 			<ul className="pageList">
         {props.pages.map((page) => (
           <li className="pageList-item" key={page.id}>

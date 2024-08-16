@@ -44,7 +44,7 @@ const App = () => {
   }
 
   // Otherwise, shows the home page.
-  return <Home pages={pages} navigate={navigate} />
+  return <Home pages={pages} navigate={navigate} fetchPages={fetchPages} />
 }
 
 export default App
