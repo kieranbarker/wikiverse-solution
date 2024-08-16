@@ -1,4 +1,5 @@
 import React from "react";
+import apiURL from "../api";
 
 const Page = (props) => {
   const handleClick = (event) => {
@@ -6,6 +7,23 @@ const Page = (props) => {
     event.preventDefault()
 
     // Updates the currentPage state (in App) with null.
+    props.navigate(null)
+  }
+
+  const handleDelete = async () => {
+    // Confirm the deletion before doing it.
+    const isConfirmed = window.confirm("Are you sure you want to delete this page?")
+    if (!isConfirmed) return;
+
+    // Send a DELETE request to /api/wiki/:slug.
+    await fetch(apiURL + "/wiki/" + props.slug, {
+      method: "DELETE"
+    })
+
+    // Get the updated list of pages.
+    await props.fetchPages();
+
+    // Return to the home page.
     props.navigate(null)
   }
 
@@ -22,6 +40,7 @@ const Page = (props) => {
           <li key={tag.id}>{tag.name}</li>
         ))}
       </ul>
+      <button onClick={handleDelete}>Delete page</button>
     </main>
   )
 }
