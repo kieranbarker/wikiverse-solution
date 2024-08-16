@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import apiURL from '../api'
 
-const Form = ({ hideForm, fetchPages }) => {
+const EditForm = ({ slug, fetchPages, ...props }) => {
   const [data, setData] = useState({
-    title: '',
-    content: '',
-    name: '',
-    email: '',
-    tags: ''
+    title: props.title,
+    content: props.content,
+    name: props.author.name,
+    email: props.author.email,
+    tags: props.tags.map((tag) => tag.name).join(" ")
   })
 
   const handleChange = (event) => {
@@ -21,28 +21,29 @@ const Form = ({ hideForm, fetchPages }) => {
     // Prevent the form from submitting to the server.
     event.preventDefault();
 
-    // Make a POST request to /api/wiki.
-    await fetch(event.target.action, {
-      method: "POST",
+    // Send a PUT request to /api/wiki/:slug.
+    const response = await fetch(event.target.action, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify(data)
     })
 
-    // Fetch the updated list of articles.
+    // Update the page in place with the response data.
+    const editedPage = await response.json();
+    props.navigate(editedPage)
+
+    // Fetch the updated list of pages.
     await fetchPages()
 
-    // Hide the form.
-    hideForm()
   }
 
   return (
-    <form action={`${apiURL}/wiki`} method="POST" onSubmit={handleSubmit}>
+    <form action={`${apiURL}/wiki/${slug}`} method="POST" onSubmit={handleSubmit}>
       <p>
         <label htmlFor="title">Title</label>
         <input
-          required={true}
           type="text"
           name="title"
           id="title"
@@ -53,7 +54,6 @@ const Form = ({ hideForm, fetchPages }) => {
       <p>
         <label htmlFor="content">Content</label>
         <textarea
-          required={true}
           name="content"
           id="content"
           value={data.content}
@@ -63,29 +63,26 @@ const Form = ({ hideForm, fetchPages }) => {
       <p>
         <label htmlFor="name">Name</label>
         <input
-          required={true}
           type="text"
           name="name"
           id="name"
           value={data.name}
-          onChange={handleChange}
+          readOnly={true}
         />
       </p>
       <p>
         <label htmlFor="email">Email</label>
         <input
-          required={true}
           type="email"
           name="email"
           id="email"
           value={data.email}
-          onChange={handleChange}
+          readOnly={true}
         />
       </p>
       <p>
         <label htmlFor="tags">Tags</label>
         <input
-          required={true}
           type="text"
           name="tags"
           id="tags"
@@ -94,10 +91,10 @@ const Form = ({ hideForm, fetchPages }) => {
         />
       </p>
       <p>
-        <button type="submit">Add page</button>
+        <button type="submit">Edit page</button>
       </p>
     </form>
   )
 }
 
-export default Form
+export default EditForm

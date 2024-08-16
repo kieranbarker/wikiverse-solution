@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import apiURL from "../api";
-import Form from "./Form";
+import CreateForm from "./CreateForm";
 
 const Home = (props) => {
   const [isAddingPage, setIsAddingPage] = useState(false)
@@ -29,7 +29,7 @@ const Home = (props) => {
       </p>
   
       <button onClick={() => setIsAddingPage(!isAddingPage)} aria-expanded={isAddingPage}>Toggle Form</button>
-      {isAddingPage && <Form hideForm={hideForm} fetchPages={props.fetchPages} />}
+      {isAddingPage && <CreateForm hideForm={hideForm} fetchPages={props.fetchPages} />}
 
 			<ul className="pageList">
         {props.pages.map((page) => (

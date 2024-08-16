@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import apiURL from "../api";
+import EditForm from "./EditForm";
 
 const Page = (props) => {
+  const [isEditingPage, setIsEditingPage] = useState(false)
+
   const handleClick = (event) => {
     // Prevents the browser from following the link.
     event.preventDefault()
@@ -40,7 +43,10 @@ const Page = (props) => {
           <li key={tag.id}>{tag.name}</li>
         ))}
       </ul>
+      <button onClick={() => setIsEditingPage(!isEditingPage)} aria-expanded={isEditingPage}>Edit page</button>
+      {" "}
       <button onClick={handleDelete}>Delete page</button>
+      {isEditingPage && <EditForm {...props} />}
     </main>
   )
 }
